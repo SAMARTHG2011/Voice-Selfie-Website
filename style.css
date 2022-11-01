@@ -1,0 +1,42 @@
+#start-btn
+{
+    width: 40%;
+} 
+#camera
+{
+    width:360px;
+    height: 250px;
+    border:1px solid grey;
+}
+#logo_img
+{
+    width: 150px;
+    border-radius: 100px;
+}
+#textbox
+{
+    width: 300px;
+    resize: none;
+}
+
+.dps_video
+{ 
+	position: absolute;
+    border: 1px solid #000000;
+	left: calc(30%);
+    z-index: 1;
+	width: 600px;
+	height: 350px;
+	
+}
+
+.img_cap
+{ 
+	position: absolute;
+	left: calc(50% - 136px);
+	top: calc(90% + 250px);
+    z-index: 2;
+	width: 200px;
+	height: 200px;
+	
+}
