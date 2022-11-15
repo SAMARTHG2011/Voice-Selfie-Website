@@ -1,0 +1,208 @@
+
+style.css
+
+body {
+  background-image: url('schoolimage.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position:50% 50%;
+}
+#start-btn
+{
+    width: 40%;
+} 
+#camera
+{
+    width:360px;
+    height: 250px;
+	background-color: #FFFFFF;
+    border:1px solid grey;
+}
+#logo_img
+{
+    width: 150px;
+    border-radius: 100px;
+}
+#textbox
+{
+    width: 300px;
+    resize: none;
+}
+
+#button {
+  background-color: #008CBA; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 4px;
+  width: 100px;
+}
+
+#button1 {
+  background-color: #008CBA; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 4px;
+  width: 300px;
+}
+
+html:
+<html>
+    <head>
+       <title>My Selfie App</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+<link href="style.css" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
+<script>
+window.onload = function() {
+  var context = new AudioContext();
+}
+</script>
+</head>
+ 
+<body>
+    
+	<audio src="music.mp3" autoplay controls>	
+	<embed 
+		src="music.mp3"
+		loop="true">
+	</audio>
+    <div class="container">
+    <center>
+        <a href="" id="link" download="myselfie.png"></a>
+        <h1>Voice Selfie App
+            <img src="download.jpg" id="logo_img">
+        </h1>
+        <hr>
+        <h4 style="color:red;">Please press allow as soon as popup comes. After you give a voice command</h4>
+        
+        <div class="form-group">
+            <h3>Say "Take My Selfie"</h3>
+            <label style="color:white;">Your voice output : </label>
+            <textarea  id="textbox" class="form-control" rows="2" readonly="true"></textarea>
+        </div>
+		<button id="button1" class="btn btn-primary" onclick="start()">Click here for selfie!! </button>
+        <br>
+		<br>
+
+        <label style="color:white;">Your webcam : </label>
+        <div id="camera"></div>
+        <br>
+
+        <label style="color:white;">Your selife Will Display Here: </label>
+        <div id="result"></div>
+		<br>
+        <button id="button" class="btn-wa">Share</button>
+    </center>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
+
+main.js:
+var SpeechRecognition = window.webkitSpeechRecognition;
+var reco = new SpeechRecognition();
+
+var btnWhatsApp = document.getElementsByClassName("btn-wa")[0];
+
+function start(){
+    document.getElementById("textbox").innerHTML = "";
+    reco.start();
+}
+
+reco.onresult = function(event){
+    console.log(event);
+
+    var Content = event.results[0][0].transcript;
+    console.log(Content);
+    document.getElementById("textbox").innerHTML = Content;
+    if(Content =="take my selfie"){
+        console.log("taking selfie---");
+        speak();
+
+    }
+    else{speak_error()}
+    
+}
+
+function speak(){
+    var synth = window.speechSynthesis;
+
+    speak_data = "Taking Your Selfie in 5 seconds"
+
+
+    var utterThis = new SpeechSynthesisUtterance(speak_data);
+synth.speak(utterThis);
+Webcam.attach(camera)
+
+
+
+setTimeout(function()
+{
+    take_snapshot();
+    save()
+},5000
+)
+}
+function speak_error(){
+    var synth = window.speechSynthesis;
+
+    speak_data = "Sorry I could not understand that Please say 'take my selfie'"
+
+
+    var utterThis = new SpeechSynthesisUtterance(speak_data);
+synth.speak(utterThis);
+
+}
+
+Webcam.set({
+    width:360,
+    height:250,
+    image_format : 'png',
+    png_quality :99
+});
+camera = document.getElementById("camera");
+
+
+function take_snapshot(){
+    Webcam.snap(function(data_uri){
+        document.getElementById("result").innerHTML = '<img id="selfie_img" src="'+data_uri+'">';
+    }
+)
+}
+
+
+function save(){
+    link = document.getElementById("link");
+    image = document.getElementById("selfie_img").src;
+    link.href = image;
+    link.click();
+}
+
+
+btnWhatsApp.addEventListener("click", async function() {
+    image = document.getElementById("selfie_img").src;
+    var res =  await fetch(image);
+    var blob = await res.blob();
+
+    var file = new File([blob], "selfie.jpg", {type: blob.type})
+    
+    await navigator.share({
+        title: "selfiee",
+        files:[file]    
+    })
+    .then((res) => console.log(res))
+})

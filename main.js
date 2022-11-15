@@ -1,5 +1,8 @@
+
 var SpeechRecognition = window.webkitSpeechRecognition;
 var reco = new SpeechRecognition();
+
+var btnWhatsApp = document.getElementsByClassName("btn-wa")[0];
 
 function start(){
     document.getElementById("textbox").innerHTML = "";
@@ -62,9 +65,9 @@ camera = document.getElementById("camera");
 
 function take_snapshot(){
     Webcam.snap(function(data_uri){
-        document.getElementById("result").innerHTML = 
-		'<video class = "dps_video" autoplay muted loop id="myVideo"><source src="dpsvideo (2).mp4" type="video/mp4"></video><img class = "img_cap" id="selfie_img" src="'+data_uri+'"></img>';
-    })
+        document.getElementById("result").innerHTML = '<img id="selfie_img" src="'+data_uri+'">';
+    }
+)
 }
 
 
@@ -74,3 +77,18 @@ function save(){
     link.href = image;
     link.click();
 }
+
+
+btnWhatsApp.addEventListener("click", async function() {
+    image = document.getElementById("selfie_img").src;
+    var res =  await fetch(image);
+    var blob = await res.blob();
+
+    var file = new File([blob], "selfie.jpg", {type: blob.type})
+    
+    await navigator.share({
+        title: "selfiee",
+        files:[file]    
+    })
+    .then((res) => console.log(res))
+})
